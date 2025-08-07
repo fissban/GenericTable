@@ -1,0 +1,27 @@
+{
+  "name": "ng-generic-table",
+  "version": "1.0.1",
+  "description": "Componente de tabla genérica para Angular 16.",
+  "author": "",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "angular",
+    "table",
+    "datatable",
+    "generic",
+    "component"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "@angular/common": "16.2.0",
+    "@angular/core": "16.2.0",
+    "@angular/forms": "16.2.0"
+  },
+  "dependencies": {
+    "tslib": "2.3.0"
+  },
+  "sideEffects": false
+}

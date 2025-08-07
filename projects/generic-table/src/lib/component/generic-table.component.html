@@ -1,0 +1,175 @@
+<div class="modern-header">
+    <div class="modern-filter-box">
+        <span class="modern-filter-icon">
+            <i class="bi bi-search"></i>
+        </span>
+        <div class="modern-filter-chips">
+            <ng-container *ngFor="let chip of globalFilters; let i = index">
+                <span class="modern-chip">
+                    {{ chip }}
+                    <button type="button" class="modern-chip-close" (click)="removeGlobalFilter(i)">
+                        <i class="bi bi-x" aria-label="Cerrar"></i>
+                    </button>
+                </span>
+            </ng-container>
+            <input type="text" class="modern-filter-input" [(ngModel)]="globalFilterInput" (keydown)="onGlobalFilterKeydown($event)" (input)="applyGlobalFilter()" placeholder="Buscar...">
+        </div>
+        <button [disabled]="!columnsFilters && globalFilters.length == 0" class="modern-filter-clear" (click)="clearGlobalFilter()" title="Limpiar filtro">
+            X Clear
+        </button>
+    </div>
+
+    <div class="dropdown">
+        <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+
+        </button>
+        <ul class="dropdown-menu" style="font-size: 14px;">
+            <li>
+                <a class="dropdown-item" href="#" (click)="$event.preventDefault(); exportToExcel();">
+                    <i class="bi bi-file-earmark-excel me-2"></i> Exportar Excel
+                </a>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+            <li *ngFor="let header of columns">
+                <div class="dropdown-item" style="display: flex; align-items: center; gap: 0.5em;">
+                    <input class="form-check-input m-0" type="checkbox" [id]="'col-' + header.key" [checked]="header.visible" (change)="onVisibilityChange(header, $event)">
+                    <label class="form-check-label button-config-label" [for]="'col-' + header.key" style="margin-bottom: 0;">
+                        {{header.label}}
+                    </label>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+</div>
+
+
+
+
+<div class="table-responsive table-radius">
+    <table class="table table-sm  table-hover" #excelTable>
+        <thead class="table-dark">
+            <tr cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropColumn($event)" class="drag-header-row">
+                <th *ngFor="let header of getVisibleColumns(); let i = index" cdkDrag [class.dragging]="draggingIndex == i" (cdkDragStarted)="onDragStarted(i)" (cdkDragEnded)="onDragEnded()" style="position: relative; vertical-align: middle;" [style.minWidth.px]="header.minWidth || 'auto'">
+                    <div style="display: flex; align-items: center;">
+                        <span class="drag-handle" cdkDragHandle>
+                            <i class="bi bi-grip-vertical"></i>
+                        </span>
+                        <span>{{header.label}}</span>
+                        <ng-container *ngIf="header.sortable">
+                            <button type="button" class="btn btn-link btn-sm p-0 ms-2" style="color: white;" [ngClass]="{'active-sort': sortKey == header.key}" (click)="sortColumn(header.key)" title="Ordenar">
+                                <i *ngIf="sortKey == header.key" [class]="'text-light bi ' + (sortOrder == 'asc'  ? 'bi-caret-down-fill' : 'bi-caret-up-fill')"></i>
+                                <i *ngIf="sortKey != header.key" class="text-light bi bi-arrow-down-up"></i>
+                            </button>
+                        </ng-container>
+
+                        <ng-container *ngIf="header.filterable">
+                            <button (click)="openFilter(header, $event.clientX, $event.clientY)" class="btn btn-sm p-0 ms-1" style="color: #fff;" [ngClass]="{'active-filter': columnsFilters[header.key]}" (click)="toggleFilter(header.key)" type="button" title="Aplicar filtro">
+                                <i class="bi bi-filter"></i>
+                            </button>
+
+                            <ng-container *ngTemplateOutlet="filter; context: { header: header }"></ng-container>
+
+                            <span *ngIf="columnsFilters[header.key]" class="modern-badge-primary" (click)="setFilter(header.key, '')">
+                                {{ columnsFilters[header.key] }}
+                                <i class="bi bi-x"></i>
+                            </span>
+                        </ng-container>
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let row of getPagedData()">
+                <ng-container *ngFor="let header of columns">
+                    <td *ngIf="header.visible != false">
+
+                        <!------------------------->
+                        <ng-container [ngSwitch]="header.cellType">
+                            <ng-container *ngSwitchCase="'DATE'">
+                                {{ row[header.key]  | date:'dd/MM/yyyy' }}
+                            </ng-container>
+                            <ng-container *ngSwitchCase="'DATETIME'">
+                                {{ row[header.key]  | date:'dd/MM/yyyy HH:mm:ss' }}
+                            </ng-container>
+                            <ng-container *ngSwitchCase="'TIME'">
+                                {{ row[header.key] | date:'HH:mm:ss' }}
+                            </ng-container>
+                            <ng-container *ngSwitchCase="'TEMPLATE'">
+                                <ng-container *ngTemplateOutlet="header.template ?? null; context: { $implicit: row[header.key], rowData: row }"></ng-container>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="'CHECKBOX'">
+                                <input class="form-check-input" type="checkbox" [checked]="row[header.key]" (click)="$event.preventDefault()">
+                            </ng-container>
+                            <ng-container *ngSwitchCase="'TEXT'">
+                                <span>{{ row[header.key] }}</span>
+
+                            </ng-container>
+                            <ng-container *ngSwitchCase="'NUMBER'">
+                                {{ row[header.key] | number }}
+                            </ng-container>
+                            <ng-container *ngSwitchCase="'PIPE'">
+                                {{header.pipe?.model?.transform(row[header.key], (header.pipe?.args || []))}}
+                            </ng-container>
+                            <ng-container *ngSwitchDefault>
+                                <span>{{ row[header.key] }}</span>
+                            </ng-container>
+
+
+                        </ng-container>
+
+                        <!------------------------->
+                    </td>
+                </ng-container>
+            </tr>
+            <tr *ngIf="getFilteredData().length == 0">
+                <td [attr.colspan]="getVisibleColumns().length" style="text-align: center; color: #6c757d;">Sin datos</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Paginación Bootstrap -->
+    <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+        <nav *ngIf="config?.pagination && totalPages > 1" aria-label="Paginación de tabla" class="mt-2" style="flex: 1; display: flex; justify-content: center;">
+            <ul class="pagination pagination-sm justify-content-center">
+                <li class="page-item" [class.disabled]="currentPage == 1">
+                    <a class="page-link" href="#" (click)="$event.preventDefault(); goToPage(currentPage - 1)">&laquo;</a>
+                </li>
+                <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index" [class.active]="currentPage == (i+1)">
+                    <a class="page-link" href="#" (click)="$event.preventDefault(); goToPage(i+1)">{{i+1}}</a>
+                </li>
+                <li class="page-item" [class.disabled]="currentPage === totalPages">
+                    <a class="page-link" href="#" (click)="$event.preventDefault(); goToPage(currentPage + 1)">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
+
+        <select class="form-select form-select-sm" style="max-width: 80px;" aria-label="Seleccionar cantidad de filas"
+            [ngModel]="config.itemsPerPage" (ngModelChange)="onItemsPerPageChange($event)">
+            <option [ngValue]="5">5</option>
+            <option [ngValue]="25">25</option>
+            <option [ngValue]="50">50</option>
+            <option [ngValue]="100">100</option>
+        </select>
+    </div>
+
+</div>
+
+
+
+<ng-template #filter let-header='header'>
+    <div *ngIf="activeFilterKey == header.key && showFilterModal" class="modern-filter-modal" [ngStyle]="{'position': 'fixed', 'top.px': filterModalY, 'left.px': filterModalX, 'z-index': 1000, 'background': 'var(--bs-white)', 'box-shadow': '0 2px 8px rgba(0,0,0,0.15)', 'padding': '1em', 'border-radius': '6px', 'min-width': '180px'}">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5em;">
+            <span style="color: var(--bs-gray-900);">Filtrar: {{header.label}}</span>
+            <button (click)="closeFilterModal()" style="background: none; border: none; font-size: 1.2em; cursor: pointer; color: var(--bs-gray-900);" title="Cerrar">
+                <i class="bi bi-x"></i>
+            </button>
+        </div>
+        <select style="width: 100%; font-size: 0.95em; padding: 0.25em; margin-bottom: 0.5em;" (change)="setFilter(header.key, $event)">
+            <option value="">Todos</option>
+            <option *ngFor="let option of getColumnOptions(header.key)" [value]="option">{{option}}</option>
+        </select>
+    </div>
+</ng-template>

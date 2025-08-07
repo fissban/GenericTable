@@ -1,0 +1,32 @@
+<div class="container-fluid">
+    <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+        <h1 style="flex: 1; text-align: center; margin: 0;">Welcome to the Generic Table Demo</h1>
+        <button (click)="toggleTheme()" class="btn btn-secondary">
+            Cambiar tema
+        </button>
+    </div>
+    <generic-table [tableId]="'myTable'" [data]="tableData" [columns]="tableColumns"></generic-table>
+</div>
+
+
+<ng-template #tableCellAccion let-data="rowData">
+    <button class="btn btn-primary btn-sm me-1" [disabled]="!data.activo" title="Modificar">
+        <i class="bi bi-pencil"></i>
+    </button>
+    <ng-container *ngIf="data.activo">
+        <button class="btn btn-danger btn-sm me-1" title="Baja">
+            <i class="bi bi-trash"></i>
+        </button>
+    </ng-container>
+    <ng-container *ngIf="!data.activo">
+        <button class="btn btn-success btn-sm me-1" title="Alta">
+            <i class="bi bi-check-lg"></i>
+        </button>
+    </ng-container>
+</ng-template>
+
+<ng-template #tableCellEstado let-data="rowData">
+    <h6><span class="badge" style="width: 70px;" [ngClass]="data.activo ? 'bg-success' : 'bg-secondary'">
+            {{ data.activo ? 'Activo' : 'Inactivo' }}
+        </span></h6>
+</ng-template>

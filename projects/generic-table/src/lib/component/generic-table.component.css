@@ -1,0 +1,266 @@
+/* Tema light por defecto si no se define data-bs-theme */
+
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+.pagination {
+    --bs-pagination-active-bg: #495057 !important;
+    --bs-pagination-active-border-color: #495057 !important;
+    /*--bs-pagination-color: #495057 !important;*/
+}
+
+/* Tema claro */
+[data-bs-theme="light"] {
+    --bs-gray-25: #fcfcfd;
+    --bs-gray-50: #f9fafb;
+    --bs-gray-100: #f8f9fa;
+    --bs-gray-200: #e9ecef;
+    --bs-gray-300: #dee2e6;
+    --bs-gray-400: #ced4da;
+    --bs-gray-500: #adb5bd;
+    --bs-gray-600: #6c757d;
+    --bs-gray-700: #495057;
+    --bs-gray-800: #343a40;
+    --bs-gray-900: #212529;
+    --bs-gray-950: #0c111d;
+}
+
+/* Tema oscuro */
+[data-bs-theme="dark"] {
+    --bs-gray-25: #0c111d !important;
+    --bs-gray-50: #212529 !important;
+    --bs-gray-100: #343a40 !important;
+    --bs-gray-200: #495057 !important;
+    --bs-gray-300: #6c757d !important;
+    --bs-gray-400: #adb5bd !important;
+    --bs-gray-500: #ced4da !important;
+    --bs-gray-600: #dee2e6 !important;
+    --bs-gray-700: #e9ecef !important;
+    --bs-gray-800: #f8f9fa !important;
+    --bs-gray-900: #f9fafb !important;
+    --bs-gray-950: #fcfcfd !important;
+    --bs-white: #000;
+    --bs-dark: #fff;
+
+}
+
+/* Dropdown de filtro de columna debajo del botón */
+/* Dropdown de filtro de columna debajo del botón */
+.modern-filter-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 160px;
+    background: var(--bs-white);
+    border: 1px solid var(--bs-gray-300);
+    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.08);
+    padding: 0.5em;
+    z-index: 10;
+    margin-top: 4px;
+}
+
+/* Badge primary estilo Bootstrap */
+.modern-badge-primary {
+    display: inline-flex;
+    align-items: center;
+    background: var(--bs-blue);
+    color: #fff;
+    border-radius: 999px;
+    font-size: 12px;
+    padding: 0.1em 0.5em;
+    margin-left: 0.5em;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* Filtro global moderno */
+.modern-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.2em;
+}
+
+.modern-filter-box {
+    display: flex;
+    align-items: center;
+    background: var(--bs-white);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.08);
+    border: 1px solid var(--bs-gray-300);
+    padding: 0.05em 0.75em;
+    max-width: 750px;
+}
+
+.modern-filter-icon {
+    display: flex;
+    align-items: center;
+    margin-right: 0.5em;
+    color: var(--bs-blue);
+    font-size: 1.2em;
+}
+
+.modern-filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    flex: 1;
+    min-height: 30px;
+}
+
+.modern-chip {
+    font-size: 12px;
+    background: var(--bs-blue);
+    color: var(--bs-white);
+    border-radius: 999px;
+    margin-right: 0.25rem;
+    display: flex;
+    align-items: center;
+    padding: 0.25em 0.75em;
+    margin-bottom: 2px;
+}
+
+.modern-chip-close {
+    background: none;
+    border: none;
+    color: var(--bs-white);
+    margin-left: 0.25rem;
+    font-size: 1em;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+}
+
+.modern-filter-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    flex-grow: 1;
+    min-width: 400px;
+    font-size: 14px;
+    padding: 0.25em 0.5em;
+}
+
+.modern-filter-clear {
+    background: var(--bs-gray-500);
+    color: var(--bs-white);
+    border: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.modern-filter-clear:disabled {
+    background: var(--bs-gray-300);
+    color: var(--bs-gray-500);
+    cursor: not-allowed;
+}
+
+.modern-filter-clear:hover {
+    background: #773030;
+}
+
+.thead-visible {
+    position: sticky;
+    top: 0;
+    background: #e3f2fd;
+    /* Color de fondo para el header */
+    z-index: 2;
+}
+
+.table {
+
+    font-size: 14px;
+}
+
+.table-radius {
+    border-radius: 0.5rem 0.5rem 0px 0px;
+}
+
+.table-dark {
+    --bs-table-bg: #4f555b;
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 300;
+}
+
+.popover-menu {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    background: var(--bs-white);
+    position: absolute;
+    right: 0;
+    top: 100%;
+    z-index: 300;
+}
+
+.drag-handle {
+    cursor: grab;
+    margin-right: 6px;
+    color: #888;
+    font-size: 1.1em;
+    vertical-align: middle;
+}
+
+
+.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drag-preview {
+    opacity: 0.8;
+    /* Adjust the opacity of the dragged element preview */
+    background-color: var(--bs-primary-border-subtle) !important;
+    /* Customize the background color of the dragged element preview */
+    box-shadow: 0 4px 8px var(--bs-primary-border-subtle);
+    /* Add a box shadow to the dragged element preview */
+}
+
+.div-config {
+    position: relative;
+}
+
+.button-config {
+    background: #212529;
+    color: #f3f3f3;
+    border: none;
+    padding: 0.25em 0.75em;
+    border-radius: 0.25em;
+    font-size: 1em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.button-config-label {
+    color: var(--bs-gray-900);
+}
+
+.active-filter {
+    color: var(--bs-blue) !important;
+}
+
+.active-filter .bi-funnel {
+    color: var(--bs-blue) !important;
+}
+
+
+.active-sort .bi {
+    color: var(--bs-blue) !important;
+}
