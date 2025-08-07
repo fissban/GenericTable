@@ -1,52 +1,108 @@
-# GenericTableWorkspace
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.16.
+# ng-generic-table
 
-## Development server
+> Componente de tabla genérica para Angular 16+ con soporte para temas claro/oscuro, filtros, paginación y más.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+# ng-generic-table
 
-## Code scaffolding
+![Tabla modo oscuro](./src/assets/tabla-modo-oscuro.png.png)
+![Tabla modo claro](./src/assets/tabla-modo-claro.png)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Requisitos
 
-## Build
+- **Angular**: >=16.2.0
+- **Bootstrap**: >=5.3.0
+- **bootstrap-icons**: >=1.13.1
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Instalación
 
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
-
-# generic-table
-
-Librería Angular 16 para crear tablas genéricas reutilizables.
-
-## Estructura
-- Workspace Angular 16
-- Librería: `generic-table`
-- Componente inicial: `table`
-
-## Uso
-1. Instala dependencias: `npm install`
-2. Compila la librería: `ng build generic-table`
-3. Importa el módulo en tu aplicación Angular.
-
-## Publicación
-Puedes subir este proyecto a Git inicializando un repositorio con:
-```cmd
-git init
-git add .
-git commit -m "Initial commit"
+```bash
+npm install ng-generic-table bootstrap bootstrap-icons
 ```
 
-## Personalización
-Agrega más componentes o funcionalidades según tus necesidades.
+## Uso básico
+
+1. Importa el módulo en tu aplicación:
+
+```typescript
+import { GenericTableModule } from 'ng-generic-table';
+
+@NgModule({
+  imports: [GenericTableModule]
+})
+export class AppModule { }
+```
+
+2. Agrega los estilos de Bootstrap y Bootstrap Icons en tu `angular.json`:
+
+```json
+"styles": [
+  "node_modules/bootstrap/dist/css/bootstrap.min.css",
+  "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+  "src/styles.css"
+]
+```
+
+3. Usa el componente en tu template:
+
+```html
+<generic-table [data]="tuDataSource" [columns]="columnas"></generic-table>
+```
+
+
+## Compatibilidad
+
+- Angular 16+
+- Bootstrap 5+
+
+
+## Definición de columnas
+
+El array `columns` define las columnas que se mostrarán en la tabla. Cada columna debe seguir el modelo `TableColumn`:
+
+| Propiedad      | Tipo                | Requerido | Descripción                                                                 |
+|--------------- |-------------------- |-----------|-----------------------------------------------------------------------------|
+| `key`          | string              | Sí        | Identificador único de la columna.                                          |
+| `label`        | string              | Sí        | Etiqueta o título que se muestra en el encabezado de la tabla.              |
+| `visible`      | boolean             | Sí        | Define si la columna es visible.                                            |
+| `sortable`     | boolean             | Sí        | Indica si la columna es ordenable.                                          |
+| `filterable`   | boolean             | Sí        | Indica si la columna es filtrable.                                          |
+| `cellType`     | CellType            | Sí        | Tipo de celda para renderizar el contenido (`TEXT`, `NUMBER`, etc).         |
+| `template`     | TemplateRef<any>    | No        | Plantilla personalizada para la celda (si `cellType` es `TEMPLATE`).        |
+| `pipe`         | { obj }             | No        | Permite aplicar un Pipe al valor de la columna.                             |
+| `minWidth`     | number              | No        | Ancho mínimo de la columna en píxeles.                                      |
+| `defaultSort`  | 'asc' \| 'desc'     | No        | Orden predeterminado para la columna.                                       |
+
+### Tipos de celda (`CellType`)
+
+- `TEXT` — Texto simple
+- `NUMBER` — Número
+- `DATE` — Fecha
+- `DATETIME` — Fecha y hora
+- `TIME` — Hora
+- `CHECKBOX` — Checkbox
+- `TEMPLATE` — Usa la plantilla personalizada definida en `template`
+- `PIPE` — Aplica el pipe definido en `pipe`
+
+### Ejemplo de definición:
+
+```typescript
+import { CellType } from 'ng-generic-table';
+
+columns: TableColumn[] = [
+  { key: 'id', label: 'ID', visible: true, sortable: true, filterable: true, cellType: CellType.NUMBER },
+  { key: 'nombre', label: 'Nombre', visible: true, sortable: true, filterable: true, cellType: CellType.TEXT },
+  { key: 'fecha', label: 'Fecha', visible: true, sortable: true, filterable: false, cellType: CellType.DATE },
+  { key: 'activo', label: 'Activo', visible: true, sortable: false, filterable: true, cellType: CellType.CHECKBOX }
+];
+```
+
+
+
+## Desarrollo
+
+Puedes probar la librería usando la demo incluida en `projects/demo-app`.
+
+## Licencia
+
+MIT
