@@ -1,12 +1,14 @@
 
+
 # ng-generic-table
 
 > Componente de tabla genérica para Angular 16+ con soporte para temas claro/oscuro, filtros, paginación y más.
 
+# GenericTableWorkspace
+
+[![Ver en GitHub](https://img.shields.io/badge/GitHub-Repo-blue?logo=github)](https://github.com/fissban/GenericTable)
+
 # ng-generic-table
-
-
-
 
 <img width="800" height="300" alt="tabla-modo-claro" src="https://github.com/user-attachments/assets/b6f63946-4eaa-4f5a-86a1-6cc1ab08850a" />
 <img width="800" height="300" alt="tabla-modo-oscuro png" src="https://github.com/user-attachments/assets/e92f5d51-8786-4ed5-a1f8-4307c100d4a0" />
