@@ -3,25 +3,22 @@
         <span class="modern-filter-icon">
             <i class="bi bi-search"></i>
         </span>
-        <div class="modern-filter-chips">
-            <ng-container *ngFor="let chip of globalFilters; let i = index">
-                <span class="modern-chip">
-                    {{ chip }}
-                    <button type="button" class="modern-chip-close" (click)="removeGlobalFilter(i)">
-                        <i class="bi bi-x" aria-label="Cerrar"></i>
-                    </button>
-                </span>
-            </ng-container>
-            <input type="text" class="modern-filter-input" [(ngModel)]="globalFilterInput" (keydown)="onGlobalFilterKeydown($event)" (input)="applyGlobalFilter()" placeholder="Buscar...">
-        </div>
+
+        <ng-container *ngFor="let chip of globalFilters; let i = index">
+            <span class="badge text-bg-primary cursor-click" (click)="removeGlobalFilter(i)">
+                {{ chip }}
+                <i class="bi bi-x" aria-label="Cerrar"></i>
+            </span>
+        </ng-container>
+        <input type="text" class="modern-filter-input" [(ngModel)]="globalFilterInput" (keydown)="onGlobalFilterKeydown($event)" (input)="applyGlobalFilter()" placeholder="Buscar...">
+
         <button [disabled]="!columnsFilters && globalFilters.length == 0" class="modern-filter-clear" (click)="clearGlobalFilter()" title="Limpiar filtro">
             X Clear
         </button>
     </div>
 
     <div class="dropdown">
-        <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-
+        <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
         </button>
         <ul class="dropdown-menu" style="font-size: 14px;">
             <li>
@@ -50,7 +47,7 @@
 
 <div class="table-responsive table-radius">
     <table class="table table-sm  table-hover" #excelTable>
-        <thead class="table-dark">
+        <thead class="">
             <tr cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropColumn($event)" class="drag-header-row">
                 <th *ngFor="let header of getVisibleColumns(); let i = index" cdkDrag [class.dragging]="draggingIndex == i" (cdkDragStarted)="onDragStarted(i)" (cdkDragEnded)="onDragEnded()" style="position: relative; vertical-align: middle;" [style.minWidth.px]="header.minWidth || 'auto'">
                     <div style="display: flex; align-items: center;">
@@ -59,20 +56,25 @@
                         </span>
                         <span>{{header.label}}</span>
                         <ng-container *ngIf="header.sortable">
-                            <button type="button" class="btn btn-link btn-sm p-0 ms-2" style="color: white;" [ngClass]="{'active-sort': sortKey == header.key}" (click)="sortColumn(header.key)" title="Ordenar">
-                                <i *ngIf="sortKey == header.key" [class]="'text-light bi ' + (sortOrder == 'asc'  ? 'bi-caret-down-fill' : 'bi-caret-up-fill')"></i>
-                                <i *ngIf="sortKey != header.key" class="text-light bi bi-arrow-down-up"></i>
+                            <button type="button" class="btn btn-link btn-sm p-0 ms-2" [ngClass]="{'active-sort': sortKey == header.key}" (click)="sortColumn(header.key)" title="Ordenar">
+                                <i *ngIf="sortKey == header.key" [class]="'bi ' + (sortOrder == 'asc'  ? 'bi-caret-down-fill' : 'bi-caret-up-fill')"></i>
+                                <i *ngIf="sortKey != header.key" class="bi bi-arrow-down-up"></i>
                             </button>
                         </ng-container>
 
                         <ng-container *ngIf="header.filterable">
-                            <button (click)="openFilter(header, $event.clientX, $event.clientY)" class="btn btn-sm p-0 ms-1" style="color: #fff;" [ngClass]="{'active-filter': columnsFilters[header.key]}" (click)="toggleFilter(header.key)" type="button" title="Aplicar filtro">
+                            <button class="btn btn-link btn-sm p-0 ms-2" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" [ngClass]="{'active-sort': columnsFilters[header.key]}" (click)="toggleFilter(header.key)" type="button" title="Aplicar filtro">
                                 <i class="bi bi-filter"></i>
                             </button>
 
-                            <ng-container *ngTemplateOutlet="filter; context: { header: header }"></ng-container>
+                            <div class="dropdown-menu position-fixed p-2">
+                                <select class="form-select form-select-sm" (change)="setFilter(header.key, $event)">
+                                    <option value="">Todos</option>
+                                    <option *ngFor="let option of getColumnOptions(header.key)" [value]="option">{{option}}</option>
+                                </select>
+                            </div>
 
-                            <span *ngIf="columnsFilters[header.key]" class="modern-badge-primary" (click)="setFilter(header.key, '')">
+                            <span *ngIf="columnsFilters[header.key]" class="badge text-bg-primary cursor-click" (click)="setFilter(header.key, '')">
                                 {{ columnsFilters[header.key] }}
                                 <i class="bi bi-x"></i>
                             </span>
@@ -146,8 +148,7 @@
             </ul>
         </nav>
 
-        <select class="form-select form-select-sm" style="max-width: 80px;" aria-label="Seleccionar cantidad de filas"
-            [ngModel]="config.itemsPerPage" (ngModelChange)="onItemsPerPageChange($event)">
+        <select class="form-select form-select-sm" style="max-width: 80px;" aria-label="Seleccionar cantidad de filas" [ngModel]="config.itemsPerPage" (ngModelChange)="onItemsPerPageChange($event)">
             <option [ngValue]="5">5</option>
             <option [ngValue]="25">25</option>
             <option [ngValue]="50">50</option>
@@ -156,20 +157,3 @@
     </div>
 
 </div>
-
-
-
-<ng-template #filter let-header='header'>
-    <div *ngIf="activeFilterKey == header.key && showFilterModal" class="modern-filter-modal" [ngStyle]="{'position': 'fixed', 'top.px': filterModalY, 'left.px': filterModalX, 'z-index': 1000, 'background': 'var(--bs-white)', 'box-shadow': '0 2px 8px rgba(0,0,0,0.15)', 'padding': '1em', 'border-radius': '6px', 'min-width': '180px'}">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5em;">
-            <span style="color: var(--bs-gray-900);">Filtrar: {{header.label}}</span>
-            <button (click)="closeFilterModal()" style="background: none; border: none; font-size: 1.2em; cursor: pointer; color: var(--bs-gray-900);" title="Cerrar">
-                <i class="bi bi-x"></i>
-            </button>
-        </div>
-        <select style="width: 100%; font-size: 0.95em; padding: 0.25em; margin-bottom: 0.5em;" (change)="setFilter(header.key, $event)">
-            <option value="">Todos</option>
-            <option *ngFor="let option of getColumnOptions(header.key)" [value]="option">{{option}}</option>
-        </select>
-    </div>
-</ng-template>

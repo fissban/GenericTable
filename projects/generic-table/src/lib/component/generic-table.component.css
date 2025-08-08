@@ -99,37 +99,6 @@
     font-size: 1.2em;
 }
 
-.modern-filter-chips {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    flex: 1;
-    min-height: 30px;
-}
-
-.modern-chip {
-    font-size: 12px;
-    background: var(--bs-blue);
-    color: var(--bs-white);
-    border-radius: 999px;
-    margin-right: 0.25rem;
-    display: flex;
-    align-items: center;
-    padding: 0.25em 0.75em;
-    margin-bottom: 2px;
-}
-
-.modern-chip-close {
-    background: none;
-    border: none;
-    color: var(--bs-white);
-    margin-left: 0.25rem;
-    font-size: 1em;
-    line-height: 1;
-    cursor: pointer;
-    padding: 0;
-}
-
 .modern-filter-input {
     border: none;
     outline: none;
@@ -138,6 +107,11 @@
     min-width: 400px;
     font-size: 14px;
     padding: 0.25em 0.5em;
+}
+
+.cursor-click
+{
+    cursor: pointer;
 }
 
 .modern-filter-clear {
@@ -174,12 +148,13 @@
     font-size: 14px;
 }
 
+
 .table-radius {
     border-radius: 0.5rem 0.5rem 0px 0px;
 }
 
-.table-dark {
-    --bs-table-bg: #4f555b;
+.table thead tr th{
+    background: var(--bs-gray-100);
 }
 
 .modal-backdrop {

@@ -43,12 +43,6 @@ export class GenericTableComponent implements OnInit, OnChanges
     // Índice del elemento que se está arrastrando
     public draggingIndex: number | null = null;
 
-    // Estado para el filtro modal flotante
-    public showFilterModal: boolean = false;
-    public activeFilterKey: string | null = null;
-    public filterModalX: number = 0;
-    public filterModalY: number = 0;
-
     // Estado de paginación
     public currentPage: number = 1;
 
@@ -207,7 +201,7 @@ export class GenericTableComponent implements OnInit, OnChanges
         }
         this.columnsFilters[key] = value;
         this.columnsShowFilter[key] = false;
-        this.closeFilterModal();
+        this.saveTableConfig();
     }
 
     // Aplica el filtro global
@@ -297,27 +291,11 @@ export class GenericTableComponent implements OnInit, OnChanges
         this.applyGlobalFilter();
     }
 
-    public openFilter(header: TableColumn, x: number, y: number): void
-    {
-        this.activeFilterKey = header.key;
-        this.filterModalX = x;
-        this.filterModalY = y;
-        this.showFilterModal = true;
-    }
-
-    public closeFilterModal(): void
-    {
-        this.showFilterModal = false;
-        this.activeFilterKey = null;
-    }
-
     public exportToExcel(): void
     {
         const worksheet: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.excelTable.nativeElement, { raw: true });
         const workbook: XLSX.WorkBook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Hoja1');
         XLSX.writeFileXLSX(workbook, 'data.xlsx', { compression: true });
-
-
     }
 }
