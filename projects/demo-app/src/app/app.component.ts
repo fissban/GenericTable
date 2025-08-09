@@ -1,7 +1,7 @@
 
 import { DatePipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, LOCALE_ID, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { CellType, SortType, TableColumn } from 'projects/generic-table/src/public-api';
+import { CellType, GenericTableConfig, SortType, TableColumn } from 'projects/generic-table/src/public-api';
 
 @Component({
     selector: 'app-root',
@@ -16,7 +16,8 @@ export class AppComponent implements OnInit, AfterViewInit
 
     theme: 'light' | 'dark' = 'light';
 
-    toggleTheme() {
+    toggleTheme()
+    {
         this.theme = this.theme === 'light' ? 'dark' : 'light';
         document.body.setAttribute('data-bs-theme', this.theme);
     }
@@ -26,6 +27,18 @@ export class AppComponent implements OnInit, AfterViewInit
 
     tableData: any[] = [];
     tableColumns: TableColumn[] = [];
+    tableConfig: GenericTableConfig =
+        {
+            pagination: true,
+            pageSize: 5,
+            pageSizeOptions: [5, 10, 25, 50],
+
+            showGlobalFilter: true,
+            showExportButton: true,
+            showColumnConfigButton: true,
+
+            noDataMessage: 'No hay datos disponibles.'
+        };
 
     constructor(private cdr: ChangeDetectorRef) { }
 
@@ -59,7 +72,7 @@ export class AppComponent implements OnInit, AfterViewInit
             { codigo: 25, descripcion: 'Rocket Raccoon', createdAt: new Date(2025, 3, 1, 17, 45, 0, 0).toISOString(), activo: true },
         ];
         // Inicializa las columnas sin las plantillas
-        
+
     }
 
     ngAfterViewInit(): void
@@ -74,7 +87,7 @@ export class AppComponent implements OnInit, AfterViewInit
                 defaultSort: SortType.ASC,
                 filterable: true,
                 cellType: CellType.NUMBER,
-                
+
             },
             {
                 key: 'descripcion',

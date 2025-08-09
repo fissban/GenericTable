@@ -1,12 +1,16 @@
 import { PipeTransform, TemplateRef } from "@angular/core";
 
-export interface GenericTableConfig
+export type GenericTableConfig =
 {
     pagination: boolean;
-    itemsPerPage: number;
+    pageSize: number;
+    pageSizeOptions: [5, 10, 25, 50],
+
     showGlobalFilter: boolean;
     showExportButton: boolean;
     showColumnConfigButton: boolean;
+
+    noDataMessage: string,
 }
 
 export type TableColumn =
@@ -17,7 +21,6 @@ export type TableColumn =
         label: string;
         // Define si la columna es visible (por defecto, se asume visible)
         visible: boolean;
-
 
         // Indica si la columna es ordenable
         sortable: boolean;
@@ -32,6 +35,10 @@ export type TableColumn =
 
         // Ancho mínimo de la columna en píxeles
         minWidth?: number;
+        // Ancho máximo de la columna en píxeles
+        maxWidth?: number;
+        // Ancho de la columna en píxeles
+        width?: number;
 
         // Orden predeterminado ('asc' o 'desc') para establecer el orden inicial
         defaultSort?: SortType;
