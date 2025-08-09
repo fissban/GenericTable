@@ -1,8 +1,10 @@
-
-
 # ng-generic-table
 
 > Componente de tabla genérica para Angular 16+ con soporte para temas claro/oscuro, filtros, paginación y más.
+
+# Demo
+
+[Ver demo en GitHub Pages](https://fissban.github.io/GenericTable/)
 
 # GenericTableWorkspace
 
@@ -51,7 +53,7 @@ export class AppModule { }
 3. Usa el componente en tu template:
 
 ```html
-<generic-table [data]="tuDataSource" [columns]="columnas"></generic-table>
+<generic-table [data]="tuDataSource" [columns]="columnas" [config]="config"></generic-table>
 ```
 
 
@@ -102,6 +104,53 @@ columns: TableColumn[] = [
 ];
 ```
 
+### Configuración de la tabla
+
+La interfaz `GenericTableConfig` permite personalizar el comportamiento general de la tabla, como la paginación, filtros, exportación y mensajes personalizados.
+
+#### Definición
+
+```typescript
+export type GenericTableConfig = {
+  pagination: boolean;                // Habilita o deshabilita la paginación
+  pageSize: number;                   // Cantidad de filas por página
+  pageSizeOptions: [5, 10, 25, 50];   // Opciones disponibles para el tamaño de página
+  showGlobalFilter: boolean;          // Muestra/oculta el filtro global
+  showExportButton: boolean;          // Muestra/oculta el botón de exportar
+  showColumnConfigButton: boolean;    // Muestra/oculta el botón de configuración de columnas
+  noDataMessage: string;              // Mensaje a mostrar cuando no hay datos
+}
+```
+
+#### Propiedades
+
+| Propiedad                | Tipo                  | Descripción                                                        |
+|--------------------------|---------------------- |--------------------------------------------------------------------|
+| `pagination`             | boolean               | Habilita o deshabilita la paginación.                              |
+| `pageSize`               | number                | Cantidad de filas por página.                                      |
+| `pageSizeOptions`        | [5, 10, 25, 50]       | Opciones disponibles para el tamaño de página.                     |
+| `showGlobalFilter`       | boolean               | Muestra u oculta el filtro global.                                 |
+| `showExportButton`       | boolean               | Muestra u oculta el botón de exportar.                             |
+| `showColumnConfigButton` | boolean               | Muestra u oculta el botón de configuración de columnas.            |
+| `noDataMessage`          | string                | Mensaje a mostrar cuando no hay datos.                             |
+
+#### Ejemplo de uso
+
+```typescript
+import { GenericTableConfig } from 'ng-generic-table';
+
+config: GenericTableConfig = {
+  pagination: true,
+  pageSize: 10,
+  pageSizeOptions: [5, 10, 25, 50],
+  showGlobalFilter: true,
+  showExportButton: false,
+  showColumnConfigButton: true,
+  noDataMessage: 'No hay datos para mostrar'
+};
+```
+
+Y en el template:
 
 
 ## Desarrollo

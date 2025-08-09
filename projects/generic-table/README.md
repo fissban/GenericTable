@@ -2,6 +2,10 @@
 
 > Componente de tabla genérica para Angular 16+ con soporte para temas claro/oscuro, filtros, paginación y más.
 
+# Demo
+
+[Ver demo en GitHub Pages](https://fissban.github.io/GenericTable/)
+
 # GenericTableWorkspace
 
 [![Ver en GitHub](https://img.shields.io/badge/GitHub-Repo-blue?logo=github)](https://github.com/fissban/GenericTable)

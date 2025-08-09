@@ -1,10 +1,13 @@
 <div class="container-fluid">
     <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
-        <h1 style="flex: 1; text-align: center; margin: 0;">Welcome to the Generic Table Demo</h1>
+        <h1 style="flex: 1; text-align: center; margin: 0;">NG Generic Table Demo</h1>
         <button (click)="toggleTheme()" class="btn btn-secondary">
             Cambiar tema
         </button>
     </div>
+
+    <hr>
+
     <generic-table [tableId]="'myTable'" [data]="tableData" [columns]="tableColumns" [config]="tableConfig"></generic-table>
 </div>
 

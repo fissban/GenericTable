@@ -87,6 +87,7 @@ export class AppComponent implements OnInit, AfterViewInit
                 defaultSort: SortType.ASC,
                 filterable: true,
                 cellType: CellType.NUMBER,
+                maxWidth: 50
 
             },
             {
