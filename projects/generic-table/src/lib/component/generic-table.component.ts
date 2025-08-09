@@ -21,8 +21,18 @@ export class GenericTableComponent implements OnInit, OnChanges
     @Input({ required: true }) public columns: TableColumn[] = [];
     // Identificador único para cada tabla
     @Input({ required: true }) public tableId: string = 'default-table';
+    // Configuración de la tabla, con valores por defecto
+    @Input({ required: false }) public config: GenericTableConfig = {
+        pagination: true,
+        pageSize: 5,
+        pageSizeOptions: [5, 10, 25, 50],
+        
+        showGlobalFilter: true,
+        showExportButton: true,
+        showColumnConfigButton: true,
 
-    @Input({ required: false }) public config: GenericTableConfig = { pagination: true, itemsPerPage: 5, showGlobalFilter: true, showExportButton: true, showColumnConfigButton: true };
+        noDataMessage: 'No hay datos disponibles.'
+    };
 
     public showConfigMenu = false;
 
@@ -56,7 +66,7 @@ export class GenericTableComponent implements OnInit, OnChanges
     {
         if (this.config)
         {
-            this.config.itemsPerPage = value;
+            this.config.pageSize = value;
             this.currentPage = 1;
         }
     }
@@ -151,8 +161,8 @@ export class GenericTableComponent implements OnInit, OnChanges
     {
         if (!this.config?.pagination) return this.getFilteredData();
         const filtered = this.getFilteredData();
-        const start = (this.currentPage - 1) * (this.config.itemsPerPage || 10);
-        const end = start + (this.config.itemsPerPage || 10);
+        const start = (this.currentPage - 1) * (this.config.pageSize || 10);
+        const end = start + (this.config.pageSize || 10);
         return filtered.slice(start, end);
     }
 
@@ -161,7 +171,7 @@ export class GenericTableComponent implements OnInit, OnChanges
     {
         if (!this.config?.pagination) return 1;
         const total = this.data ? this.data.length : 0;
-        const perPage = this.config.itemsPerPage || 10;
+        const perPage = this.config.pageSize || 10;
         return Math.max(1, Math.ceil(total / perPage));
     }
 
