@@ -1,3 +1,42 @@
-.btn-group-sm>.btn, .btn-sm {
+.btn-group-sm>.btn,
+.btn-sm {
     --bs-btn-padding-y: 0.05rem;
+}
+
+:host ::ng-deep .row-primary {
+    background-color: #84b5e9;
+    color: #070707;
+}
+
+:host ::ng-deep .row-warning {
+    background-color: #d1b474;
+    color: #070707;
+
+}
+
+:host ::ng-deep .row-danger {
+    background-color: #d66e76;
+    color: #070707;
+    animation: rowDangerPulse 0.5s ease-in-out infinite;
+    will-change: background-color;
+}
+
+/* Oscila entre el color base y uno más oscuro */
+@keyframes rowDangerPulse {
+
+    0%,
+    100% {
+        background-color: #c23b46;
+    }
+
+    50% {
+        background-color: #9c2d36;
+    }
+}
+
+/* Respeta usuarios con reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    :host ::ng-deep .row-danger {
+        animation: none;
+    }
 }

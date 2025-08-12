@@ -1,8 +1,7 @@
-import { Component, Input, OnInit, ViewEncapsulation, OnChanges, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation, OnChanges, SimpleChanges, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import * as XLSX from 'xlsx-js-style';
 import { GenericTableConfig, SortType, TableColumn } from '../models/models';
-import { FormControl } from '@angular/forms';
 
 @Component
     ({
@@ -16,7 +15,7 @@ export class GenericTableComponent implements OnInit, OnChanges
     @ViewChild('excelTable', { read: ElementRef }) excelTable: ElementRef<HTMLDivElement> | any;
 
     // Entrada de datos para la tabla
-    @Input({ required: true }) public data: any[] = [];
+    @Input({ required: true }) public data: (Record<string, any> & { rowClass?: string; })[] = [];
     // Configuración de columnas
     @Input({ required: true }) public columns: TableColumn[] = [];
     // Identificador único para cada tabla
@@ -26,11 +25,11 @@ export class GenericTableComponent implements OnInit, OnChanges
         pagination: true,
         pageSize: 5,
         pageSizeOptions: [5, 10, 25, 50],
-        
+
         showGlobalFilter: true,
         showExportButton: true,
         showColumnConfigButton: true,
-
+        responsive: { enable: false, breakpoint: 0 },
         noDataMessage: 'No hay datos disponibles.'
     };
 
@@ -56,19 +55,11 @@ export class GenericTableComponent implements OnInit, OnChanges
     // Estado de paginación
     public currentPage: number = 1;
 
+    isResponsiveActive = false;
+
     constructor()
     {
         //
-    }
-
-    // Cambia la cantidad de items por página y reinicia la página actual
-    public onItemsPerPageChange(value: number): void
-    {
-        if (this.config)
-        {
-            this.config.pageSize = value;
-            this.currentPage = 1;
-        }
     }
 
     public ngOnInit(): void
@@ -92,6 +83,8 @@ export class GenericTableComponent implements OnInit, OnChanges
                 if (found) col.visible = found.visible;
             });
         }
+
+        this.evaluateResponsive();
     }
 
     public ngOnChanges(changes: SimpleChanges): void
@@ -157,13 +150,23 @@ export class GenericTableComponent implements OnInit, OnChanges
     }
 
     // Devuelve los datos de la página actual (paginados)
-    public getPagedData(): any[]
+    public getPagedData(): (Record<string, any> & { rowClass?: string; })[]
     {
         if (!this.config?.pagination) return this.getFilteredData();
         const filtered = this.getFilteredData();
         const start = (this.currentPage - 1) * (this.config.pageSize || 10);
         const end = start + (this.config.pageSize || 10);
         return filtered.slice(start, end);
+    }
+
+    // Cambia la cantidad de items por página y reinicia la página actual
+    public onItemsPerPageChange(value: number): void
+    {
+        if (this.config)
+        {
+            this.config.pageSize = value;
+            this.currentPage = 1;
+        }
     }
 
     // Total de páginas para la paginación
@@ -307,5 +310,18 @@ export class GenericTableComponent implements OnInit, OnChanges
         const workbook: XLSX.WorkBook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Hoja1');
         XLSX.writeFileXLSX(workbook, 'data.xlsx', { compression: true });
+    }
+
+    @HostListener('window:resize')
+    onWindowResize()
+    {
+        this.evaluateResponsive();
+    }
+
+    private evaluateResponsive()
+    {
+        const enabled = this.config?.responsive?.enable;
+        const bp = this.config?.responsive?.breakpoint ?? Number.POSITIVE_INFINITY;
+        this.isResponsiveActive = !!enabled && window.innerWidth <= bp;
     }
 }

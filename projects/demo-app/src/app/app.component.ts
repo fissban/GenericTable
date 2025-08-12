@@ -1,14 +1,13 @@
-
-import { DatePipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, LOCALE_ID, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { CellType, GenericTableConfig, SortType, TableColumn } from 'projects/generic-table/src/public-api';
 
-@Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css'],
-    providers: [{ provide: LOCALE_ID, useValue: 'es-AR' }]
-})
+@Component
+    ({
+        selector: 'app-root',
+        templateUrl: './app.component.html',
+        styleUrls: ['./app.component.css'],
+        providers: [{ provide: LOCALE_ID, useValue: 'es-AR' }]
+    })
 
 export class AppComponent implements OnInit, AfterViewInit
 {
@@ -25,7 +24,7 @@ export class AppComponent implements OnInit, AfterViewInit
     @ViewChild('tableCellEstado', { static: false }) tableCellEstadoTpl!: TemplateRef<any>;
     @ViewChild('tableCellAccion', { static: false }) tableCellAccionTpl!: TemplateRef<any>;
 
-    tableData: any[] = [];
+    tableData: (Record<string, any> & { rowClass?: string; })[] = [];
     tableColumns: TableColumn[] = [];
     tableConfig: GenericTableConfig =
         {
@@ -37,6 +36,8 @@ export class AppComponent implements OnInit, AfterViewInit
             showExportButton: true,
             showColumnConfigButton: true,
 
+            responsive: { enable: true, breakpoint: 500 },
+
             noDataMessage: 'No hay datos disponibles.'
         };
 
@@ -47,9 +48,9 @@ export class AppComponent implements OnInit, AfterViewInit
         this.tableData = [
             { codigo: 1, descripcion: 'John Doe', createdAt: new Date(2025, 6, 10, 14, 23, 0, 0).toISOString(), activo: true },
             { codigo: 2, descripcion: 'Jane Smith', createdAt: new Date(2025, 5, 22, 9, 15, 0, 0).toISOString(), activo: false },
-            { codigo: 3, descripcion: 'Alice Johnson', createdAt: new Date(2025, 3, 5, 18, 45, 0, 0).toISOString(), activo: false },
-            { codigo: 4, descripcion: 'Bob Brown', createdAt: new Date(2025, 1, 17, 7, 5, 0, 0).toISOString(), activo: true },
-            { codigo: 5, descripcion: 'Charlie White', createdAt: new Date(2025, 0, 30, 12, 30, 0, 0).toISOString(), activo: true },
+            { codigo: 3, descripcion: 'Alice Johnson', createdAt: new Date(2025, 3, 5, 18, 45, 0, 0).toISOString(), activo: false, rowClass: 'row-primary' },
+            { codigo: 4, descripcion: 'Bob Brown', createdAt: new Date(2025, 1, 17, 7, 5, 0, 0).toISOString(), activo: true, rowClass: 'row-warning' },
+            { codigo: 5, descripcion: 'Charlie White', createdAt: new Date(2025, 0, 30, 12, 30, 0, 0).toISOString(), activo: true, rowClass: 'row-danger' },
             { codigo: 6, descripcion: 'Diana Prince', createdAt: new Date(2025, 2, 12, 10, 0, 0, 0).toISOString(), activo: false },
             { codigo: 7, descripcion: 'Bruce Wayne', createdAt: new Date(2025, 4, 8, 16, 20, 0, 0).toISOString(), activo: true },
             { codigo: 8, descripcion: 'Clark Kent', createdAt: new Date(2025, 7, 19, 11, 10, 0, 0).toISOString(), activo: true },
@@ -87,7 +88,7 @@ export class AppComponent implements OnInit, AfterViewInit
                 defaultSort: SortType.ASC,
                 filterable: true,
                 cellType: CellType.NUMBER,
-                maxWidth: 50
+                width:20
 
             },
             {
