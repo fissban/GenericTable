@@ -67,18 +67,20 @@ export class AppModule { }
 
 El array `columns` define las columnas que se mostrarán en la tabla. Cada columna debe seguir el modelo `TableColumn`:
 
-| Propiedad      | Tipo                | Requerido | Descripción                                                                 |
-|--------------- |-------------------- |-----------|-----------------------------------------------------------------------------|
-| `key`          | string              | Sí        | Identificador único de la columna.                                          |
-| `label`        | string              | Sí        | Etiqueta o título que se muestra en el encabezado de la tabla.              |
-| `visible`      | boolean             | Sí        | Define si la columna es visible.                                            |
-| `sortable`     | boolean             | Sí        | Indica si la columna es ordenable.                                          |
-| `filterable`   | boolean             | Sí        | Indica si la columna es filtrable.                                          |
-| `cellType`     | CellType            | Sí        | Tipo de celda para renderizar el contenido (`TEXT`, `NUMBER`, etc).         |
-| `template`     | TemplateRef<any>    | No        | Plantilla personalizada para la celda (si `cellType` es `TEMPLATE`).        |
-| `pipe`         | { obj }             | No        | Permite aplicar un Pipe al valor de la columna.                             |
-| `minWidth`     | number              | No        | Ancho mínimo de la columna en píxeles.                                      |
-| `defaultSort`  | 'asc' \| 'desc'     | No        | Orden predeterminado para la columna.                                       |
+| Propiedad     | Tipo                                      | Requerido | Descripción                                                                 |
+|---------------|-------------------------------------------|-----------|-----------------------------------------------------------------------------|
+| `key`         | string                                    | Sí        | Identificador único de la columna.                                          |
+| `label`       | string                                    | Sí        | Etiqueta o título del encabezado.                                           |
+| `visible`     | boolean                                   | Sí        | Define si la columna es visible.                                            |
+| `sortable`    | boolean                                   | Sí        | Indica si la columna es ordenable.                                          |
+| `filterable`  | boolean                                   | Sí        | Indica si la columna es filtrable.                                          |
+| `cellType`    | CellType                                  | Sí        | Tipo de celda para renderizar el contenido.                                 |
+| `template`    | TemplateRef<any>                          | No        | Plantilla personalizada (si `cellType` es `TEMPLATE`).                      |
+| `pipe`        | { model: PipeTransform; args?: string[] } | No        | Aplica un Pipe al valor de la columna con argumentos opcionales.            |
+| `minWidth`    | number                                    | No        | Ancho mínimo de la columna en píxeles.                                      |
+| `maxWidth`    | number                                    | No        | Ancho máximo de la columna en píxeles.                                      |
+| `width`       | number                                    | No        | Ancho fijo de la columna en píxeles.                                        |
+| `defaultSort` | SortType                                  | No        | Orden inicial de la columna (`SortType.ASC` o `SortType.DESC`).             |
 
 ### Tipos de celda (`CellType`)
 
@@ -94,13 +96,15 @@ El array `columns` define las columnas que se mostrarán en la tabla. Cada colum
 ### Ejemplo de definición:
 
 ```typescript
-import { CellType } from 'ng-generic-table';
+import { CellType, SortType, TableColumn } from 'ng-generic-table';
 
 columns: TableColumn[] = [
-  { key: 'id', label: 'ID', visible: true, sortable: true, filterable: true, cellType: CellType.NUMBER },
-  { key: 'nombre', label: 'Nombre', visible: true, sortable: true, filterable: true, cellType: CellType.TEXT },
+  { key: 'id', label: 'ID', visible: true, sortable: true, filterable: true, cellType: CellType.NUMBER, defaultSort: SortType.ASC, width: 90 },
+  { key: 'nombre', label: 'Nombre', visible: true, sortable: true, filterable: true, cellType: CellType.TEXT, minWidth: 180 },
   { key: 'fecha', label: 'Fecha', visible: true, sortable: true, filterable: false, cellType: CellType.DATE },
-  { key: 'activo', label: 'Activo', visible: true, sortable: false, filterable: true, cellType: CellType.CHECKBOX }
+  { key: 'activo', label: 'Activo', visible: true, sortable: false, filterable: true, cellType: CellType.CHECKBOX },
+  // Ejemplo usando PIPE (inyecta el pipe en tu componente y pásalo aquí)
+  // { key: 'monto', label: 'Monto', visible: true, sortable: true, filterable: true, cellType: CellType.PIPE, pipe: { model: currencyPipe, args: ['USD', 'symbol', '1.2-2'] } }
 ];
 ```
 
@@ -118,6 +122,7 @@ export type GenericTableConfig = {
   showGlobalFilter: boolean;          // Muestra/oculta el filtro global
   showExportButton: boolean;          // Muestra/oculta el botón de exportar
   showColumnConfigButton: boolean;    // Muestra/oculta el botón de configuración de columnas
+  responsive: { enable: boolean; breakpoint: number }; // Modo responsive y breakpoint (px)
   noDataMessage: string;              // Mensaje a mostrar cuando no hay datos
 }
 ```
@@ -146,6 +151,7 @@ config: GenericTableConfig = {
   showGlobalFilter: true,
   showExportButton: false,
   showColumnConfigButton: true,
+  responsive: { enable: true, breakpoint: 500 },
   noDataMessage: 'No hay datos para mostrar'
 };
 ```
