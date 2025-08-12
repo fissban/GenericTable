@@ -1,31 +1,31 @@
-<div class="modern-header">
+<div class="modern-header d-flex flex-column flex-md-row gap-2 align-items-stretch align-items-md-center">
     <ng-container *ngIf="config.showGlobalFilter">
-        <div style="display: flex; flex-wrap: nowrap; align-items: center;">
-            <div class="modern-filter-box">
+        <div class="d-flex flex-column flex-sm-row flex-wrap align-items-stretch align-items-sm-center gap-2">
+            <div class="modern-filter-box d-flex align-items-center flex-grow-1" style="">
                 <span class="modern-filter-icon">
                     <i class="bi bi-search"></i>
                 </span>
-
-                <input type="text" class="modern-filter-input" [(ngModel)]="globalFilterInput" (keydown)="onGlobalFilterKeydown($event)" (input)="applyGlobalFilter()" placeholder="Buscar...">
-                <button [disabled]="!columnsFilters && globalFilters.length == 0" class="modern-filter-clear" (click)="clearGlobalFilter()" title="Limpiar filtro">
+                <input type="text" class="modern-filter-input flex-grow-1" [(ngModel)]="globalFilterInput" (keydown)="onGlobalFilterKeydown($event)" (input)="applyGlobalFilter()" placeholder="Buscar...">
+                <button [disabled]="!columnsFilters && globalFilters.length == 0" class="modern-filter-clear ms-2 flex-shrink-0" (click)="clearGlobalFilter()" title="Limpiar filtro">
                     X Clear
                 </button>
-
             </div>
 
-            <ng-container *ngFor="let chip of globalFilters; let i = index">
-                <span class="badge text-bg-primary cursor-click ms-1" (click)="removeGlobalFilter(i)">
-                    {{ chip }}
-                    <i class="bi bi-x" aria-label="Cerrar"></i>
-                </span>
-            </ng-container>
+            <div class="d-flex flex-wrap gap-1">
+                <ng-container *ngFor="let chip of globalFilters; let i = index">
+                    <span class="badge text-bg-primary cursor-click" (click)="removeGlobalFilter(i)">
+                        {{ chip }}
+                        <i class="bi bi-x" aria-label="Cerrar"></i>
+                    </span>
+                </ng-container>
+            </div>
         </div>
     </ng-container>
 
-    <div class="dropdown">
-        <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+    <div class="dropdown ms-md-auto align-self-stretch align-self-md-center" *ngIf="config.showColumnConfigButton || config.showExportButton">
+        <button *ngIf="config.showExportButton" class="btn btn-sm btn-secondary dropdown-toggle w-100 w-md-auto" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
         </button>
-        <ul class="dropdown-menu" style="font-size: 14px;">
+        <ul *ngIf="config.showColumnConfigButton" class="dropdown-menu" style="font-size: 14px;">
             <li>
                 <a class="dropdown-item" href="#" (click)="$event.preventDefault(); exportToExcel();">
                     <i class="bi bi-file-earmark-excel me-2"></i> Exportar Excel
@@ -35,23 +35,20 @@
                 <hr class="dropdown-divider">
             </li>
             <li *ngFor="let header of columns">
-                <div class="dropdown-item" style="display: flex; align-items: center; gap: 0.5em;">
+                <div class="dropdown-item d-flex align-items-center gap-2">
                     <input class="form-check-input m-0" type="checkbox" [id]="'col-' + header.key" [checked]="header.visible" (change)="onVisibilityChange(header, $event)">
-                    <label class="form-check-label button-config-label" [for]="'col-' + header.key" style="margin-bottom: 0;">
+                    <label class="form-check-label button-config-label mb-0" [for]="'col-' + header.key">
                         {{header.label}}
                     </label>
                 </div>
             </li>
         </ul>
     </div>
-
 </div>
 
-
-
-
-<div class="table-responsive table-radius">
-    <table class="table table-sm  table-hover" #excelTable>
+<!-- MODO TABLA (por defecto) -->
+<div class="table-radius" *ngIf="!isResponsiveActive; else responsiveMode">
+    <table class="table table-sm table-hover" #excelTable>
         <thead class="">
             <tr cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropColumn($event)" class="drag-header-row">
                 <th *ngFor="let header of getVisibleColumns(); let i = index" cdkDrag [class.dragging]="draggingIndex == i" (cdkDragStarted)="onDragStarted(i)" (cdkDragEnded)="onDragEnded()" style="position: relative; vertical-align: middle;" [style.minWidth.px]="header.minWidth || 'auto'" [style.maxWidth.px]="header.maxWidth || 'auto'" [style.width.px]="header.width || 'auto'">
@@ -91,9 +88,7 @@
         <tbody>
             <tr *ngFor="let row of getPagedData()">
                 <ng-container *ngFor="let header of columns">
-                    <td *ngIf="header.visible != false">
-
-                        <!------------------------->
+                    <td *ngIf="header.visible != false" [class]="row.rowClass">
                         <ng-container [ngSwitch]="header.cellType">
                             <ng-container *ngSwitchCase="'DATE'">
                                 {{ row[header.key]  | date:'dd/MM/yyyy' }}
@@ -112,7 +107,6 @@
                             </ng-container>
                             <ng-container *ngSwitchCase="'TEXT'">
                                 <span>{{ row[header.key] }}</span>
-
                             </ng-container>
                             <ng-container *ngSwitchCase="'NUMBER'">
                                 {{ row[header.key] | number }}
@@ -123,11 +117,7 @@
                             <ng-container *ngSwitchDefault>
                                 <span>{{ row[header.key] }}</span>
                             </ng-container>
-
-
                         </ng-container>
-
-                        <!------------------------->
                     </td>
                 </ng-container>
             </tr>
@@ -137,7 +127,7 @@
         </tbody>
     </table>
 
-    <!-- Paginación Bootstrap -->
+    <!-- Paginación -->
     <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
         <nav *ngIf="config?.pagination && totalPages > 1" aria-label="Paginación de tabla" class="mt-2" style="flex: 1; display: flex; justify-content: center;">
             <ul class="pagination pagination-sm justify-content-center">
@@ -157,5 +147,71 @@
             <option *ngFor="let option of config.pageSizeOptions" [ngValue]="option">{{option}}</option>
         </select>
     </div>
-
 </div>
+
+<!-- MODO RESPONSIVE APILADO -->
+<ng-template #responsiveMode>
+    <div class="gt-responsive-wrapper">
+        <div *ngFor="let row of getPagedData()" class="gt-responsive-row" [class]="row.rowClass">
+            <div *ngFor="let header of getVisibleColumns()" class="gt-responsive-field">
+                <div class="gt-responsive-label">{{ header.label }}</div>
+                <div class="gt-responsive-value">
+                    <ng-container [ngSwitch]="header.cellType">
+                        <ng-container *ngSwitchCase="'DATE'">
+                            {{ row[header.key]  | date:'dd/MM/yyyy' }}
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'DATETIME'">
+                            {{ row[header.key]  | date:'dd/MM/yyyy HH:mm:ss' }}
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'TIME'">
+                            {{ row[header.key] | date:'HH:mm:ss' }}
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'TEMPLATE'">
+                            <ng-container *ngTemplateOutlet="header.template ?? null; context: { $implicit: row[header.key], rowData: row }"></ng-container>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'CHECKBOX'">
+                            <input class="form-check-input" type="checkbox" [checked]="row[header.key]" (click)="$event.preventDefault()">
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'TEXT'">
+                            <span>{{ row[header.key] }}</span>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'NUMBER'">
+                            {{ row[header.key] | number }}
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'PIPE'">
+                            {{header.pipe?.model?.transform(row[header.key], (header.pipe?.args || []))}}
+                        </ng-container>
+                        <ng-container *ngSwitchDefault>
+                            <span>{{ row[header.key] }}</span>
+                        </ng-container>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="getFilteredData().length == 0" class="text-center text-muted py-2">
+            {{config.noDataMessage}}
+        </div>
+
+        <!-- Paginación / selector -->
+        <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+            <nav *ngIf="config?.pagination && totalPages > 1" aria-label="Paginación de tabla" class="mt-2" style="flex: 1; display: flex; justify-content: center;">
+                <ul class="pagination pagination-sm justify-content-center">
+                    <li class="page-item" [class.disabled]="currentPage == 1">
+                        <a class="page-link" href="#" (click)="$event.preventDefault(); goToPage(currentPage - 1)">&laquo;</a>
+                    </li>
+                    <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index" [class.active]="currentPage == (i+1)">
+                        <a class="page-link" href="#" (click)="$event.preventDefault(); goToPage(i+1)">{{i+1}}</a>
+                    </li>
+                    <li class="page-item" [class.disabled]="currentPage == totalPages">
+                        <a class="page-link" href="#" (click)="$event.preventDefault(); goToPage(currentPage + 1)">&raquo;</a>
+                    </li>
+                </ul>
+            </nav>
+
+            <select class="form-select form-select-sm" style="max-width: 80px;" aria-label="Seleccionar cantidad de filas" [ngModel]="config.pageSize" (ngModelChange)="onItemsPerPageChange($event)">
+                <option *ngFor="let option of config.pageSizeOptions" [ngValue]="option">{{option}}</option>
+            </select>
+        </div>
+    </div>
+</ng-template>

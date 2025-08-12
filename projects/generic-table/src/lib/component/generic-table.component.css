@@ -74,10 +74,12 @@
 
 /* Filtro global moderno */
 .modern-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: flex !important;
+    justify-content: space-evenly;
+    align-items: stretch;
     margin-bottom: 0.2em;
+    width: 100%;
+    flex-wrap: nowrap;
 }
 
 .modern-filter-box {
@@ -88,7 +90,8 @@
     box-shadow: 0 2px 8px rgba(33, 150, 243, 0.08);
     border: 1px solid var(--bs-gray-300);
     padding: 0.05em 0.75em;
-    max-width: 750px;
+    min-width: 500px;
+    gap: .5rem;
 }
 
 .modern-filter-icon {
@@ -104,13 +107,12 @@
     outline: none;
     background: transparent;
     flex-grow: 1;
-    min-width: 400px;
+    min-width: 0;
     font-size: 14px;
     padding: 0.25em 0.5em;
 }
 
-.cursor-click
-{
+.cursor-click {
     cursor: pointer;
 }
 
@@ -153,7 +155,7 @@
     border-radius: 0.5rem 0.5rem 0px 0px;
 }
 
-.table thead tr th{
+.table thead tr th {
     background: var(--bs-gray-100);
 }
 
@@ -238,4 +240,61 @@
 
 .active-sort .bi {
     color: var(--bs-blue) !important;
+}
+
+
+/* Estilos responsive apilados */
+.gt-responsive-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+}
+
+.gt-responsive-row {
+    border: 1px solid var(--bs-gray-200);
+    border-radius: .5rem;
+    padding: .65rem .85rem;
+    background: var(--bs-gray-100);
+}
+
+.gt-responsive-field {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: .5rem;
+}
+
+.gt-responsive-field:last-child {
+    margin-bottom: 0;
+}
+
+.gt-responsive-label {
+    font-size: .65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    /*color: var(--bs-gray-500);*/
+    margin-bottom: .15rem;
+    width: 7rem;
+}
+
+.gt-responsive-value {
+    font-size: .85rem;
+    line-height: 1.25rem;
+    word-break: break-word;
+}
+
+/* Ajustes responsive */
+@media (max-width: 576px) {
+    .modern-header .dropdown>button {
+        width: 100%;
+    }
+
+    .modern-header .badge {
+        font-size: .75rem;
+    }
+
+    .modern-filter-box {
+        width: 100%;
+        min-width: auto;
+    }
 }

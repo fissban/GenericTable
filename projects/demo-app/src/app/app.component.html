@@ -26,7 +26,7 @@
 </ng-template>
 
 <ng-template #tableCellEstado let-data="rowData">
-    <h6><span class="badge" style="width: 70px;" [ngClass]="data.activo ? 'bg-success' : 'bg-secondary'">
-            {{ data.activo ? 'Activo' : 'Inactivo' }}
-        </span></h6>
+    <span class="badge" style="width: 70px;" [ngClass]="data.activo ? 'bg-success' : 'bg-secondary'">
+        {{ data.activo ? 'Activo' : 'Inactivo' }}
+    </span>
 </ng-template>

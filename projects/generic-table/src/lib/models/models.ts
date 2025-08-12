@@ -1,17 +1,17 @@
 import { PipeTransform, TemplateRef } from "@angular/core";
 
 export type GenericTableConfig =
-{
-    pagination: boolean;
-    pageSize: number;
-    pageSizeOptions: [5, 10, 25, 50],
+    {
+        pagination: boolean;
+        pageSize: number;
+        pageSizeOptions: [5, 10, 25, 50],
 
-    showGlobalFilter: boolean;
-    showExportButton: boolean;
-    showColumnConfigButton: boolean;
-
-    noDataMessage: string,
-}
+        showGlobalFilter: boolean;
+        showExportButton: boolean;
+        showColumnConfigButton: boolean;
+        responsive: { enable: boolean, breakpoint: number; };
+        noDataMessage: string;
+    };
 
 export type TableColumn =
     {
