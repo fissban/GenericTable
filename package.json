@@ -11,7 +11,7 @@
     "git-pages1": "npx ng build demo-app --configuration production",
     "git-pages2": "npx angular-cli-ghpages --dir=dist/demo-app --branch=gh-pages --no-silent",
     "build:lib": "ng build generic-table",
-    "build-npm": "npm run build:lib && node scripts/prepare-npm.mjs"
+    "build-npm": "ng build generic-table"
   },
   "private": true,
   "workspaces": [

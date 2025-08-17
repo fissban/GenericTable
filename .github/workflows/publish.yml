@@ -21,10 +21,11 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
-      - name: Build de la librería
-        run: npm run build-npm
+      - name: Build library
+        run: npx ng build generic-table
 
-      - name: Publicar en npm
-        run: npm run publish-lib
+      - name: Publish to npm
+        working-directory: dist/generic-table
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
