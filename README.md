@@ -20,12 +20,16 @@
 - **Angular**: >=16.2.0
 - **Bootstrap**: >=5.3.0
 - **bootstrap-icons**: >=1.13.1
+- **xlsx-js-style** (o **xlsx**): >=1.2.0
+- **file-saver**: >=2.0.5
 
 ## Instalación
 
 ```bash
-npm install ng-generic-table bootstrap bootstrap-icons
+npm install ng-generic-table bootstrap bootstrap-icons xlsx-js-style file-saver
 ```
+
+> Nota: Si no necesitas estilos en los archivos Excel, puedes usar "xlsx" en lugar de "xlsx-js-style".
 
 ## Uso básico
 
